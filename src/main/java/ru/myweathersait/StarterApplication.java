@@ -31,6 +31,7 @@ public class StarterApplication {
         return page;
     }*/
     public static void main(String[] args) throws IOException{
+        //
         SpringApplication.run(StarterApplication.class);
 
      /*   Document page = getPage();
