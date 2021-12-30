@@ -24,11 +24,16 @@ public class WeatherHistoryEntity {
     private Long id;
 
     @Value("weather_date")
-    private Date weatherDate;
+    private String weatherDate;
     @Value("weather_value")
     private String weatherValue;
 
-    public WeatherHistoryEntity(Date weatherDate) {
+    public WeatherHistoryEntity(String weatherDate) {
         this.weatherDate = weatherDate;
+    }
+
+    public WeatherHistoryEntity(String weatherDate, String weatherValue) {
+        this.weatherDate = weatherDate;
+        this.weatherValue = weatherValue;
     }
 }

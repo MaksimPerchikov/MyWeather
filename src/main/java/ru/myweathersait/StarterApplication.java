@@ -1,17 +1,20 @@
 package ru.myweathersait;
 
+import com.sun.glass.ui.Application;
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 @SpringBootApplication
 public class StarterApplication {
-    private static Integer i;
+    /*private static Integer i;
 
     public static Integer getI() {
         return i;
@@ -23,29 +26,28 @@ public class StarterApplication {
 
 
     private static Document getPage() throws IOException {
-        String url = "https://yandex.ru/";
+        String url = "https://yandex.ru";
         Document page = Jsoup.parse(new URL(url), 3000);
         return page;
-    }
+    }*/
     public static void main(String[] args) throws IOException{
+        SpringApplication.run(StarterApplication.class);
 
-        Document page = getPage();
-        System.out.println(page);
-        /*Element date = page.select("span[class=datetime__date]").first();
+     /*   Document page = getPage();
+        Element date = page.select("span[class=datetime__date]").first();
         String day = date.select("span[class=datetime__day]").text();
         String month = date.select("span[class=datetime__month]").text();
         Integer monthNumber = searchMonth(month);
-        System.out.println(day+ "."+monthNumber);
+        String endOutput = day+"."+monthNumber+"."+2021;
+        System.out.println(endOutput);
 
+        Element wth = page.select("div[class=weather__content]").first();
+        String weatherNow = wth.select("a[aria-label]").text();
+        System.out.println("Погода: "+weatherNow);
 
-        System.out.println("  Погода  ");
-        Element wth = page.select("div[class=weather__content]").first();*/
-      //  System.out.println(wth);
-       // System.out.println(jsonVersion);
+    }*/
 
-    }
-
-   public static Integer searchMonth(String str){
+  /* public static Integer searchMonth(String str){
 
         switch (str){
             case "декабря,":
@@ -79,6 +81,6 @@ public class StarterApplication {
                 setI(11);break;
         }
         return getI();
-
+*/
     }
 }

@@ -9,11 +9,9 @@ import ru.myweathersait.entity.WeatherHistoryEntity;
 import ru.myweathersait.repository.WeatherHistoryEntityRepository;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class WeatherHistoryDao {
@@ -30,28 +28,39 @@ public class WeatherHistoryDao {
     }
 
     //поиск прогноза погоды по текущей дате
-    public Optional<WeatherHistoryEntity> findByWeatherCurrentData(WeatherHistoryEntity weatherHistoryEntity) throws IOException {
-        try{
-            List<WeatherHistoryEntity> weatherHistoryEntityList
-                                    = weatherHistoryEntityRepository.findAll();
-            Optional<WeatherHistoryEntity> weatherHistoryEntityOptional = weatherHistoryEntityList.stream()
-                    .filter(element -> element.getWeatherDate().equals(weatherHistoryEntity.getWeatherDate()))
-                    .findFirst();
+    public Object findByWeatherCurrentData(WeatherHistoryEntity weatherHistoryEntity) throws IOException {
+            try{
 
-            return weatherHistoryEntityOptional;
-
+    List<WeatherHistoryEntity> weatherHistoryEntityList
+            = weatherHistoryEntityRepository.findAll();
+    Optional<WeatherHistoryEntity> weatherHistoryEntityOptional = weatherHistoryEntityList.stream()
+            .filter(element -> element.getWeatherDate().equals(weatherHistoryEntity.getWeatherDate()))
+            .findFirst();
+    // return weatherHistoryEntityOptional;
+    if(weatherHistoryEntity.getWeatherDate().equals(weatherHistoryEntityOptional.get().getWeatherDate())){
+        return weatherHistoryEntityOptional;
+            }
         }catch (Exception e){
             Document page = getPage();
             Element date = page.select("span[class=datetime__date]").first();
             String day = date.select("span[class=datetime__day]").text();
             String month = date.select("span[class=datetime__month]").text();
+            Integer monthNumber = searchMonth(month);
+            String endOutput = day + "-" + monthNumber + "-" + 2021;
 
-            System.out.println(day+ "."+month);
+            Element wth = page.select("div[class=weather__content]").first();
+            String weatherNow = wth.select("a[aria-label]").text();
+            // System.out.println("Погода: "+weatherNow);
 
+            //WeatherHistoryEntity newWthHistEnt = new WeatherHistoryEntity(endOutput,weatherNow);
+            weatherHistoryEntity.setWeatherDate(endOutput);
+            weatherHistoryEntity.setWeatherValue(weatherNow);
+            weatherHistoryEntityRepository.save(weatherHistoryEntity);
         }
-        return null;
-    }
 
+
+        return weatherHistoryEntity;
+    }
 
 
     //метод,показывающий страницу яндекса
@@ -67,35 +76,40 @@ public class WeatherHistoryDao {
             case "декабря,":
                 setI(12);
                 break;
-            case "января":
+            case "января,":
                 setI(1);
                 break;
-            case "февраля":
+            case "февраля,":
                 setI(2);
                 break;
-            case "марта":
+            case "марта,":
                 setI(3);
                 break;
-            case "апреля":
+            case "апреля,":
                 setI(4);
                 break;
-            case "мая":
+            case "мая,":
                 setI(5);break;
-            case "июня":
+            case "июня,":
                 setI(6);break;
-            case "июля":
+            case "июля,":
                 setI(7);break;
-            case "августа":
+            case "августа,":
                 setI(8);break;
-            case "сентября":
+            case "сентября,":
                 setI(9);break;
-            case "октября":
+            case "октября,":
                 setI(10);break;
-            case "ноября":
+            case "ноября,":
                 setI(11);break;
         }
         return getI();
 
+    }
+
+    //вывести все прогнозы, которые есть в базе
+    public List<WeatherHistoryEntity> findAll(){
+      return weatherHistoryEntityRepository.findAll();
     }
 
 }
